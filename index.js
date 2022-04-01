@@ -1,6 +1,11 @@
+
+
+
 // Imports
 const express = require("express");
-const repoContext = require("./repository/repository-wrapper")
+const repoContext = require("./repository/repository-wrapper");
+const productValidate = require(".middleware/product-validation");
+const productLogger = require("./middleware/product-logger");
 const app = express();
 
 
@@ -28,7 +33,7 @@ app.get("/api/products/:id", (req, res) => {
 
 
 //POST new product
-app.post("/api/products", (req, res) => {
+app.post("/api/products", [productLogger, productValidate], (req, res) => {
     const newProduct = req.body;
     const addedProduct = repoContext.products.createProduct(newProduct);
     return res.status(201).send(addedProduct);
